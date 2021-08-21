@@ -1,0 +1,37 @@
+{
+  "name": "Kate3",
+  "author": "MakeAwesomeHappen",
+  "companyName": "Home",
+  "version": "1.0.0",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "Kate3",
+    "uuid": "b02ddbbc-171b-43a4-84cf-ea746f219bba",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+      "aplite",
+      "basalt",
+      "chalk",
+      "diorite"
+    ],
+    "watchapp": {
+      "watchface": true
+    },
+    "messageKeys": [
+      "dummy"
+    ],
+    "resources": {
+      "media": [
+        {
+          "file": "images/p1.png",
+          "name": "IMAGE_BACKGROUND",
+          "targetPlatforms": null,
+          "type": "bitmap"
+        }
+      ]
+    }
+  }
+}

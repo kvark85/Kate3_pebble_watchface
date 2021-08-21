@@ -1,0 +1,37 @@
+{
+    "targetPlatforms": [
+        "aplite", 
+        "basalt", 
+        "chalk", 
+        "diorite"
+    ], 
+    "displayName": "Kate3", 
+    "name": "Kate3", 
+    "messageKeys": {
+        "dummy": 10000
+    }, 
+    "companyName": "MakeAwesomeHappen", 
+    "enableMultiJS": true, 
+    "versionLabel": "1.0", 
+    "capabilities": [], 
+    "sdkVersion": "3", 
+    "appKeys": {
+        "dummy": 10000
+    }, 
+    "longName": "Kate3", 
+    "shortName": "Kate3", 
+    "watchapp": {
+        "watchface": true
+    }, 
+    "resources": {
+        "media": [
+            {
+                "targetPlatforms": null, 
+                "type": "bitmap", 
+                "name": "IMAGE_BACKGROUND", 
+                "file": "images/p1.png"
+            }
+        ]
+    }, 
+    "uuid": "b02ddbbc-171b-43a4-84cf-ea746f219bba"
+}
