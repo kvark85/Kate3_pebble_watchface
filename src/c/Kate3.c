@@ -2,37 +2,76 @@
 
 // 144×168
 
+// Declare globally
 static Window *s_window;
-static TextLayer *s_time_layer;
-static BitmapLayer *s_background_layer;
+// static GFont s_perfect_dos_20 ;
+// static GFont s_perfect_dos_48;
+static TextLayer *s_text_time_layer;
+static TextLayer *s_text_weather_layer;
+
 static GBitmap *s_background_bitmap;
+static BitmapLayer *s_background_layer;
+
+static char temperature_buffer[8];
+
+void in_received_handler(DictionaryIterator *received, void *context) {
+  Tuple *temperature = dict_find(received, MESSAGE_KEY_WeatherTemperature);
+  if (temperature) {
+    snprintf(
+      temperature_buffer,
+      sizeof(temperature_buffer), "%d°C",
+      (int)temperature->value->int32
+    );
+    text_layer_set_text(s_text_weather_layer, temperature_buffer);
+  }
+}
 
 static void main_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
-  GRect bounds = layer_get_bounds(window_layer);
+  // s_perfect_dos_20 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_PERFECT_DOS_20));
+  // s_perfect_dos_48 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_PERFECT_DOS_48));
 
-  // Create GBitmap
+  // Create background
   s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BACKGROUND);
-
-  // Create BitmapLayer to display the GBitmap
-  s_background_layer = bitmap_layer_create(bounds);
-
-  // Set the bitmap onto the layer and add to the window
+  s_background_layer = bitmap_layer_create(GRect(0, 0, 144, 168));
   bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap);
   layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer));
 
-  s_time_layer = text_layer_create(GRect(8, 0, bounds.size.w, 50));
-  text_layer_set_background_color(s_time_layer, GColorClear);
-  text_layer_set_text_color(s_time_layer, GColorBlack);
-  text_layer_set_text(s_time_layer, "00:00");
-  text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
-  layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
+  // create time layer - this is where time goes
+  s_text_time_layer = text_layer_create(GRect(2, 0-2, 65, 28));
+  text_layer_set_text_alignment(s_text_time_layer, GTextAlignmentCenter);
+  text_layer_set_background_color(s_text_time_layer, GColorClear);
+  text_layer_set_text_color(s_text_time_layer, GColorBlack);
+  // text_layer_set_background_color(s_text_time_layer, GColorBlack);
+  // text_layer_set_text_color(s_text_time_layer, GColorWhite);
+  text_layer_set_font(s_text_time_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
+  layer_add_child(window_layer, text_layer_get_layer(s_text_time_layer));
+
+  // create weather layer - this is where the date goes
+  s_text_weather_layer = text_layer_create(GRect(2, 28-2, 65, 18));
+  text_layer_set_text_alignment(s_text_weather_layer, GTextAlignmentCenter);
+  text_layer_set_background_color(s_text_weather_layer, GColorClear);
+  text_layer_set_text_color(s_text_weather_layer, GColorBlack);
+  // text_layer_set_background_color(s_text_weather_layer, GColorBlack);
+  // text_layer_set_text_color(s_text_weather_layer, GColorWhite);
+  text_layer_set_font(s_text_weather_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD));
+  text_layer_set_text(s_text_weather_layer, "Load");
+  layer_add_child(window_layer, text_layer_get_layer(s_text_weather_layer));
 }
 
 static void main_window_unload(Window *window) {
+  // destroy the text layers - this is good
+  text_layer_destroy(s_text_time_layer);
+  text_layer_destroy(s_text_weather_layer);
+
+  // destroy the image layers
   gbitmap_destroy(s_background_bitmap);
+  layer_remove_from_parent(bitmap_layer_get_layer(s_background_layer));
   bitmap_layer_destroy(s_background_layer);
-  text_layer_destroy(s_time_layer);
+
+  // unload the fonts
+  // fonts_unload_custom_font(s_perfect_dos_20);
+  // fonts_unload_custom_font(s_perfect_dos_48);
 }
 
 static void update_time() {
@@ -46,7 +85,7 @@ static void update_time() {
                                           "%H:%M" : "%I:%M", tick_time);
 
   // Display this time on the TextLayer
-  text_layer_set_text(s_time_layer, s_buffer);
+  text_layer_set_text(s_text_time_layer, s_buffer);
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
@@ -63,10 +102,14 @@ static void init(void) {
   const bool animated = true;
   window_stack_push(s_window, animated);
 
-    update_time();
+  update_time();
 
   // Register with TickTimerService
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+
+  // App message init
+  app_message_open(64, 16);
+  app_message_register_inbox_received(in_received_handler);
 }
 
 static void deinit(void) {
