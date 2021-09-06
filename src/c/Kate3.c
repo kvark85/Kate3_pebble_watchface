@@ -4,8 +4,6 @@
 
 // Declare globally
 static Window *s_window;
-// static GFont s_perfect_dos_20 ;
-// static GFont s_perfect_dos_48;
 static TextLayer *s_text_time_layer;
 static TextLayer *s_text_weather_layer;
 
@@ -15,6 +13,7 @@ static BitmapLayer *s_background_layer;
 static char temperature_buffer[8];
 
 void in_received_handler(DictionaryIterator *received, void *context) {
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "(C) Received message from JS file");
   Tuple *temperature = dict_find(received, MESSAGE_KEY_WeatherTemperature);
   if (temperature) {
     snprintf(
@@ -28,8 +27,6 @@ void in_received_handler(DictionaryIterator *received, void *context) {
 
 static void main_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
-  // s_perfect_dos_20 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_PERFECT_DOS_20));
-  // s_perfect_dos_48 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_PERFECT_DOS_48));
 
   // Create background
   s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BACKGROUND);
@@ -68,10 +65,6 @@ static void main_window_unload(Window *window) {
   gbitmap_destroy(s_background_bitmap);
   layer_remove_from_parent(bitmap_layer_get_layer(s_background_layer));
   bitmap_layer_destroy(s_background_layer);
-
-  // unload the fonts
-  // fonts_unload_custom_font(s_perfect_dos_20);
-  // fonts_unload_custom_font(s_perfect_dos_48);
 }
 
 static void update_time() {
@@ -94,7 +87,7 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 
 static void init(void) {
   s_window = window_create();
-  // window_set_click_config_provider(s_window, click_config_provider);
+
   window_set_window_handlers(s_window, (WindowHandlers) {
     .load = main_window_load,
     .unload = main_window_unload,
@@ -119,7 +112,7 @@ static void deinit(void) {
 int main(void) {
   init();
 
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Done initializing, pushed window: %p", s_window);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "(C) Done initializing, pushed window: %p", s_window);
 
   app_event_loop();
   deinit();

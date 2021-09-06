@@ -18,8 +18,8 @@
       "diorite"
     ],
     "capabilities": [
-     "location"
-   ],
+      "location"
+    ],
     "watchapp": {
       "watchface": true
     },
