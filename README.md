@@ -1,7 +1,7 @@
 # Kate3_pebble_watchface
 Simple watchface with weather for pebble watch.
 
-<img src="https://github.com/kvark85/Kate3_pebble_watchface/raw/master/Images/Kate3.jpg" >
+<img src="https://raw.githubusercontent.com/kvark85/Kate3_pebble_watchface/main/Images/Kate3.jpg" >
 
 ## Build and run watchface in emulator
 pebble build && pebble install --emulator basalt
