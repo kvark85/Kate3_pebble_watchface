@@ -16,12 +16,7 @@ void in_received_handler(DictionaryIterator *received, void *context) {
   APP_LOG(APP_LOG_LEVEL_DEBUG, "(C) Received message from JS file");
   Tuple *temperature = dict_find(received, MESSAGE_KEY_WeatherTemperature);
   if (temperature) {
-    snprintf(
-      temperature_buffer,
-      sizeof(temperature_buffer), "%d°C",
-      (int)temperature->value->int32
-    );
-    text_layer_set_text(s_text_weather_layer, temperature_buffer);
+    text_layer_set_text(s_text_weather_layer, temperature->value->cstring);
   }
 }
 
