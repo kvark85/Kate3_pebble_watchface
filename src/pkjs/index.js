@@ -1,5 +1,9 @@
 var previousTemperature;
 
+const getOpenWeatherMapApiKey = function () {
+    return localStorage.getItem("openWeatherMapApiKey") || "";
+};
+
 var xhrRequest = function (url, type, callback) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
@@ -11,7 +15,7 @@ var xhrRequest = function (url, type, callback) {
 
 function locationSuccess(pos) {
     // Construct URL
-    var APIKey = localStorage.getItem("openWeatherMapApiKey") || "";
+    var APIKey = getOpenWeatherMapApiKey();
     var url = 'http://api.openweathermap.org/data/2.5/weather?lat=' +
         pos.coords.latitude + '&lon=' + pos.coords.longitude + '&appid=' + APIKey;
     console.log("(JS) API KEY", APIKey);
@@ -82,18 +86,19 @@ Pebble.addEventListener('ready',
 
 Pebble.addEventListener('showConfiguration', function() {
     // Show config page
-    var openweathermap_api_key = localStorage.getItem("openWeatherMapApiKey") || "";
-    console.log('(JS) Show configuration page', 'localStorageOpenWeatherMapApiKey=' + openweathermap_api_key);
+    var openWeatherMapApiKey = getOpenWeatherMapApiKey();
+    console.log('(JS) Show configuration page', 'localStorageOpenWeatherMapApiKey=' + openWeatherMapApiKey);
     Pebble.openURL('https://kvark85.github.io/Kate3_pebble_watchface/configuration-page/configurations.html?' +
         'version=0.1' +
-        '&openweathermap_api_key=' + encodeURIComponent(openweathermap_api_key));
+        '&openWeatherMapApiKey=' + encodeURIComponent(openWeatherMapApiKey));
 });
 
 Pebble.addEventListener('webviewclosed', function(e) {
     if (e.response) {
         var configurations = JSON.parse(decodeURIComponent(e.response));
-        console.log('(JS) Save configuration', 'openweathermap_api_key=' +  configurations.openweathermap_api_key);
-        localStorage.setItem("openWeatherMapApiKey", configurations.openweathermap_api_key);
+        console.log('(JS) Save configuration', 'openWeatherMapApiKey=' +  configurations.openWeatherMapApiKey);
+        localStorage.setItem("openWeatherMapApiKey", configurations.openWeatherMapApiKey);
+        previousTemperature = null;
         getLocationAndWeather();
     }
     else {

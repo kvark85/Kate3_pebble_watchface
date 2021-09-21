@@ -48,10 +48,10 @@
 <h3>OpenWeatherMap API Key</h3>
 
 <div>
-  <label for="openweathermap_api_key">Please, enter your own API Key for OpenWeatherMap</label>
+  <label for="openWeatherMapApiKey">Please, enter your own API Key for OpenWeatherMap</label>
 </div>
 
-<input class="form-control" placeholder="api key" id="openweathermap_api_key">
+<input class="form-control" placeholder="api key" id="openWeatherMapApiKey">
 
 <div class="buttons">
   <div>
@@ -63,7 +63,7 @@
 </div>
 
 <script>
-    var openWeatherMapApiKey = document.getElementById('openweathermap_api_key');
+    var openWeatherMapApiKey = document.getElementById('openWeatherMapApiKey');
 
     // Determine the correct return URL (emulator vs real watch)
     function getQueryParam(variable, defaultValue) {
@@ -82,9 +82,8 @@
     document.getElementById('b-submit').addEventListener('click', function() {
         // Make a data object to be sent, coercing value types to integers
         var options = {
-            'openweathermap_api_key': openWeatherMapApiKey.value.trim()
+            'openWeatherMapApiKey': openWeatherMapApiKey.value.trim()
         };
-
 
         // Encode and send the data when the page closes
         document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(options));
@@ -96,7 +95,7 @@
     });
 
     document.addEventListener("DOMContentLoaded", function() {
-        openWeatherMapApiKey.value = getQueryParam('openweathermap_api_key', '');
+        openWeatherMapApiKey.value = getQueryParam('openWeatherMapApiKey', '');
     });
 </script>
 </body>
